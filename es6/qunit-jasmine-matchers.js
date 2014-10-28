@@ -15,7 +15,15 @@ let ConvertMatcher = recast.Visitor.extend({
       return convertOkMatcher(node);
     } else if (~["equal", "strictEqual", "deepEqual"].indexOf(fnName)) {
       return convertEqualMatcher(node);
-    } else if (~["test", "asyncTest"].indexOf(fnName)) {
+    }
+    this.genericVisit(node);
+  }
+});
+
+let ConvertTest = recast.Visitor.extend({
+  visitCallExpression: function(node) {
+    let fnName = node.callee.name;
+    if (~["test", "asyncTest"].indexOf(fnName)) {
       return convertTest(node);
     }
     this.genericVisit(node);
@@ -23,7 +31,8 @@ let ConvertMatcher = recast.Visitor.extend({
 });
 
 recast.run((ast, callback) => {
-  callback(new ConvertMatcher().visit(ast));
+  let matcherConvertedAst = new ConvertMatcher().visit(ast);
+  callback(new ConvertTest().visit(matcherConvertedAst));
 }, runOptions);
 
 
