@@ -8,14 +8,12 @@ npm install
 grunt watch
 ```
 
-# Convert matchers
+# Convert matchers and test
 ```node es5/qunit-jasmine-matchers.js <QUNIT_TEST_PATH>```
 
-ok()
-equal()
-strictEqual()
-deepEqual()
+* ok, equal, strictEqual, deepEqual --> expect().toEqual()
+* test() -> it()
+* asyncTest() => it(..., function(done) {...})
 
--->
-
-expect().toEqual()
+# Known issues
+* ok, equal just check for truthiness, expect().toEqual is stricter.
